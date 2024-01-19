@@ -4,6 +4,15 @@ import os
 import random
 import string
 from pathlib import Path
+import subprocess
+
+def prerequisite_check():
+    result = subprocess.run(['python', 'prerequisite_check.py'], capture_output=True, text=True)
+    if result.returncode != 0:
+        print(f"Error: {result.stderr}")
+    else:
+        print(result.stdout)
+
 
 def find_project_root(current_file):
     # Assuming the script is in 'scripts/dev-setup'
@@ -30,6 +39,8 @@ def create_secret_file(path, content):
         print(f"Secret file already exists: {path}, skipping...")
 
 def main():
+
+    prerequisite_check()
 
     project_root = find_project_root(__file__)
     secrets_path = os.path.join(project_root, '.secrets')
